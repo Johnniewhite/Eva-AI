@@ -1,119 +1,263 @@
-import pyttsx3  # pip install pyttsx3
-import speech_recognition as sr  # pip install speechRecognition
+import pyttsx3
+import speech_recognition as sr
 import datetime
-import wikipedia  # pip install wikipedia
-import webbrowser
-import os
-import smtplib
+import wikipedia
+import time
+import pydictionary
+import pyjokes
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.keys import Keys
+from selenium import webdriver
+import pyautogui
 
-print("Initializing Jarvis")
-MASTER = "Aman"
+# Use female voice
+import pyperclip
+
+hiddenimports = [
+    'pyttsx3.drivers',
+    'pyttsx3.drivers.dummy',
+    'pyttsx3.drivers.espeak',
+    'pyttsx3.drivers.nsss',
+    'pyttsx3.drivers.sapi5', ]
 
 engine = pyttsx3.init('sapi5')
-voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[0].id)
+
+voices = engine.getProperty('voice')
+engine.setProperty('voice', voices)
+engine.setProperty('rate', 150)
+engine.setProperty('volume', 10)
 
 
-# Speak function will speak/Pronounce the string which is passed to it
-def speak(text):
-    engine.say(text)
+def speak(audio):
+    engine.say(audio)
     engine.runAndWait()
 
 
-# This funtion will wish you as per the current time
 def wishMe():
     hour = int(datetime.datetime.now().hour)
-    print(hour)
-
     if hour >= 0 and hour < 12:
-        speak("good morning" + MASTER)
-
+        speak("Good Morning!")
     elif hour >= 12 and hour < 18:
-        speak("good afternoon" + MASTER)
-
+        speak("Good Afternoon!")
     else:
-        speak("good Evening" + MASTER)
-
-    speak("i am your assistant. How may I help you?")
-
-
-def sendEmail(to, content):
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.ehlo()
-    server.starttls()
-    server.login('kumaraman.rose@gmail.ocm', 'password')
-    server.sendmail("harry@gmail.com", to, content)
-    server.close()
+        speak("Good Evening!")
+    speak("I am Eva, is there anything I can help you with?")
 
 
-# This function will take command from the microphone
-def takeCommand():
+def takecommand():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
+        r.pause_threshold = 1
         audio = r.listen(source)
-
     try:
         print("Recognizing...")
         query = r.recognize_google(audio, language='en-in')
         print(f"user said: {query}\n")
-
     except Exception as e:
-        print("Say that again please...")
-        query = None
-
+        print(e)
+        return "None"
     return query
 
 
-# main program starting
-def main():
-    speak("Initializing Jarvis...")
-    wishMe()
-    query = takeCommand()
-
-    # Logic for executing tasks as per the query
-    if 'wikipedia' in query.lower():
-        speak('searching wikipedia...')
-        query = query.replace("wikipedia", "")
-        results = wikipedia.summary(query, sentences=2)
-        print(results)
-        speak(results)
-
-    elif 'open youtube' in query.lower():
-        # webbrowser.open('youtube.com')
-        url = "youtube.com"
-        chrome_path = 'c:/program Files (x86)/Google/Chrome/Application/chrome.exe %s'
-        webbrowser.get(chrome_path).open(url)
-
-    elif 'open google' in query.lower():
-        # webbrowser.open('youtube.com')
-        url = "google.com"
-        chrome_path = 'c:/program Files (x86)/Google/Chrome/Application/chrome.exe %s'
-        webbrowser.get(chrome_path).open(url)
-
-    elif 'play music' in query.lower():
-        songs_dir = "C:\\Users\\Dell\\Desktop\\Photos\\audio"
-        songs = os.listdir(songs_dir)
-        print(songs)
-        os.startfile(os.path.join(songs_dir, songs[0]))
-
-    elif 'the time' in query.lower():
-        strTime = datetime.datetime.now().strftime("%H:%M:%S")
-        speak(f"{MASTER} the time is {strTime}")
-
-    elif 'open code' in query.lower():
-        codePath = "C:\\Users\\Dell\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
-        os.startfile(codePath)
-
-    elif 'email to raj' in query.lower():
-        try:
-            speak("what should i send")
-            content = takeCommand()
-            to = "harry@gmail.ocm"
-            sendEmail(to, content)
-            speak("Email has been sent to raj")
-        except Exception as e:
-            print(e)
+def typenh():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening....")
+        r.pause_threshold = 1
+        audio = r.listen(source)
+    try:
+        print("Recognizing....")
+        typethingh = r.recognize_google(audio, language='hi')
+        print(f"user said: {typethingh}\n")
+    except Exception as e:
+        print(e)
+        speak("sorry I could not understand, say that again please...")
+        return "None"
+    return typethingh
 
 
-main()
+i = 0
+
+# Edited From Here
+n = 0
+k = 0
+
+print("Say Hi To Begin Initiation Sequence")  # Sounds SICK Right!
+while (i < 1):
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        audio = r.adjust_for_ambient_noise(source)
+        n = (n + 1)
+        audio = r.listen(source)
+        # interprete audio (Google Speech Recognition)
+    try:
+        s = (r.recognize_google(audio))
+        message = (s.lower())
+
+        if message == "hi":
+            wishMe()
+            k = 0
+            while k == 0:
+                query = takecommand().lower()
+                query.replace("could you", "")
+                query.replace("please", "")
+
+                if 'sleep' in query:
+                    speak("Entering Sleep Mode. Say Hi To Wake Me Up!")
+                    k = 1
+                    print("Say Hi To Begin Initiation Sequence")
+                    # Editing Ends Here
+                if 'who is ' in query:
+                    speak('searching Wikipedia...')                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                    query = query.replace("wikipedia", "")
+                    results = wikipedia.summary(query, sentences=2)
+                    speak("according to wikipedia")
+                    speak(results)
+                if 'meaning of ' in query:
+                    dict = dict.print_meanings(query)
+                    print(dict)
+
+                if 'Tell me a Joke' or "funny" in query:
+                    My_joke = pyjokes.get_joke(language="en", category="neutral")
+
+                    speak(  My_joke)
+                if 'manav sampada' in query:
+                    speak('loging in to manav sampada')
+                    browser = webdriver.Chrome('D:\\chromedriver.exe')
+                    browser.get('http://ehrms.upsdc.gov.in/')
+                    elem = browser.find_element_by_partial_link_text('eHRMS Login')
+                    elem.get_attribute('href')
+                    time.sleep(1)
+                    elem.click()
+                    time.sleep(1)
+                    loginr = browser.find_element_by_xpath('//*[@id="txtusername"]')
+                    loginr.send_keys('your id ')
+                    time.sleep(1)
+                    select = Select(browser.find_element_by_id('ddldept'))
+                    select.select_by_visible_text('Basic Education')
+                    time.sleep(1)
+                    password = browser.find_element_by_xpath('//*[@id="txtpwd"]')
+                    password.send_keys('your password')
+                    speak('sir I have filled all userID password etc. but ')
+                    speak('sir you have to fill the human verification captha by yourself as I am just a bot ')
+                    speak('I hope I was able to assist you')
+                if 'software' in query:
+                    speak('opening sir')
+                    query = query.replace("software", "")
+                    pyautogui.click(27, 880)
+                    pyautogui.typewrite(query)
+                    time.sleep(1)
+                    pyautogui.click(79, 441)
+                if 'send' and 'gmail' in query:
+                    speak('opening gmail')
+                    browser = webdriver.Chrome('D:\\chromedriver.exe')
+                    browser.get('https://accounts.google.com/b/0/AddMailService')
+                    time.sleep(1)
+                    login = browser.find_element_by_xpath('//*[@id="identifierId"]')
+                    login.send_keys('your gmail id @gmail.com')
+                    login.send_keys(Keys.ENTER)
+                    time.sleep(1)
+                    loginpwd = browser.find_element_by_xpath('//*[@id="password"]/div[1]/div/div[1]/input')
+                    loginpwd.send_keys('your awesom password here')
+                    loginpwd.send_keys(Keys.ENTER)
+                    time.sleep(10)
+                    try:
+                        speak('just a sec')
+                        compose = browser.find_element_by_class_name('z0')
+                        time.sleep(2)
+                        compose.click()
+                        time.sleep(1)
+                        speak('whom do you want to send the gmail')
+                        sendto = takecommand().lower()
+                        sendto = ''.join(sendto.split())
+                        tom = browser.find_element_by_name('to')
+                        tom.send_keys(sendto)
+                        speak('what is the subject?')
+                        subject = browser.find_element_by_name('subjectbox')
+                        time.sleep(0.5)
+
+                        whatissu = takecommand()
+                        subject.send_keys(whatissu)
+                        body = browser.find_element_by_name('Message Body')
+                        speak('what is the main body?')
+                        mainbody = takecommand()
+                        body.send_keys(mainbody)
+
+                    except Exception as identifier:
+                        compose = browser.find_element_by_xpath('//*[@id=":jm"]/div/div')
+                        time.sleep(1)
+                        compose.click()
+                        time.sleep(1)
+                        speak('whom do you want to send the gmail')
+                        sendto = takecommand().lower()
+                        sendto = ''.join(sendto.split())
+                        tom = browser.find_element_by_name('to')
+                        tom.send_keys(sendto)
+                        subject = browser.find_element_by_name('subjectbox')
+                        time.sleep(0.5)
+                        speak('what is the subject?')
+                        whatissu = takecommand()
+                        subject.send_keys(whatissu)
+                        body = browser.find_element_by_name('Message Body')
+                        speak('what is the main body?')
+                        mainbody = takecommand()
+                        body.send_keys(mainbody)
+
+                if 'hindi' in query:
+                    speak('what to type?')
+                    typethingh = typenh()
+                    content = typethingh
+                    pyperclip.copy(content)
+                    time.sleep(0.5)
+                    pyautogui.hotkey('ctrl', 'v')
+
+                if 'do you have a boyfriend' in query:
+                    speak('I am happy to be single')
+
+                if 'siri' in query:
+                    speak('siri is smart but I dont like him')
+
+                if 'Hey google' in query:
+                    speak('Would you respect me for once!')
+
+                if 'how are you' in query:
+                    speak('I am good ')
+
+                if 'i hate you' in query:
+                    speak('then go to siri or google. why are you even talking to me')
+
+                if 'who created you' in query:
+                    speak('I am the indegenous project of group 3, computer science, 300 level.')
+
+                if 'whatsapp' in query:
+                    browser = webdriver.Chrome('D:\\chromedriver.exe')
+                    speak('opening whatsapp web')
+                    browser.get('https://web.whatsapp.com/')
+                    speak('please scan the qr code. I am waiting for 10 seconds')
+                    time.sleep(10)
+                    try:
+                        find = browser.find_element_by_xpath('//*[@id="side"]/div[1]/div/label/div/div[2]')
+                        find.click()
+                        speak('tell the first word of the contact to whom you want to send the messege')
+                        sendmsg = takecommand()
+                        find.send_keys(sendmsg)
+                        time.sleep(1.5)
+                        find.send_keys(Keys.ENTER)
+                        try:
+                            typenum = browser.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')
+                            typenum.click()
+                            speak('what do you want to send sir?')
+                            whattosend = takecommand()
+                            typenum.send_keys(whattosend)
+                            typenum.send_keys(Keys.ENTER)
+                        except Exception as identifier:
+                            speak('there is no contact as' + sendmsg)
+                    except Exception as identifier:
+                        speak('you did not make it in 10 seconds')
+
+                if 'quit' in query:
+                    exit()
+
+    except Exception as e:
+        pass
