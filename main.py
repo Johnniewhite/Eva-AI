@@ -3,7 +3,9 @@ import speech_recognition as sr
 import datetime
 import wikipedia
 import time
-import pydictionary
+from PyDictionary import PyDictionary
+dictionary=PyDictionary()
+
 import pyjokes
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
@@ -18,9 +20,9 @@ hiddenimports = [
     'pyttsx3.drivers.dummy',
     'pyttsx3.drivers.espeak',
     'pyttsx3.drivers.nsss',
-    'pyttsx3.drivers.sapi5', ]
+    'pyttsx3.drivers.espeak', ]
 
-engine = pyttsx3.init('sapi5')
+engine = pyttsx3.init('espeak')
 
 voices = engine.getProperty('voice')
 engine.setProperty('voice', voices)
@@ -42,7 +44,14 @@ def wishMe():
     else:
         speak("Good Evening!")
     speak("I am Eva, is there anything I can help you with?")
-
+def exword(query):
+    newstring = ""
+    length = len(query)
+    for i in range (length -1, 0, -1):
+        if query[i] == " ":
+            return newstring[::-1]
+        else:
+            newstring = newstring + query[i]
 
 def takecommand():
     r = sr.Recognizer()
@@ -122,26 +131,30 @@ while (i < 1):
                     My_joke = pyjokes.get_joke(language="en", category="neutral")
 
                     speak(  My_joke)
-                if 'manav sampada' in query:
-                    speak('loging in to manav sampada')
-                    browser = webdriver.Chrome('D:\\chromedriver.exe')
-                    browser.get('http://ehrms.upsdc.gov.in/')
-                    elem = browser.find_element_by_partial_link_text('eHRMS Login')
-                    elem.get_attribute('href')
-                    time.sleep(1)
-                    elem.click()
-                    time.sleep(1)
-                    loginr = browser.find_element_by_xpath('//*[@id="txtusername"]')
-                    loginr.send_keys('your id ')
-                    time.sleep(1)
-                    select = Select(browser.find_element_by_id('ddldept'))
-                    select.select_by_visible_text('Basic Education')
-                    time.sleep(1)
-                    password = browser.find_element_by_xpath('//*[@id="txtpwd"]')
-                    password.send_keys('your password')
-                    speak('sir I have filled all userID password etc. but ')
-                    speak('sir you have to fill the human verification captha by yourself as I am just a bot ')
-                    speak('I hope I was able to assist you')
+                # if 'manav sampada' in query:
+                #     speak('loging in to manav sampada')
+                #     browser = webdriver.Chrome('D:\\chromedriver.exe')
+                #     browser.get('http://ehrms.upsdc.gov.in/')
+                #     elem = browser.find_element_by_partial_link_text('eHRMS Login')
+                #     elem.get_attribute('href')
+                #     time.sleep(1)
+                #     elem.click()
+                #     time.sleep(1)
+                #     loginr = browser.find_element_by_xpath('//*[@id="txtusername"]')
+                #     loginr.send_keys('your id ')
+                #     time.sleep(1)
+                #     select = Select(browser.find_element_by_id('ddldept'))
+                #     select.select_by_visible_text('Basic Education')
+                #     time.sleep(1)
+                #     password = browser.find_element_by_xpath('//*[@id="txtpwd"]')
+                #     password.send_keys('your password')
+                #     speak('sir I have filled all userID password etc. but ')
+                #     speak('sir you have to fill the human verification captha by yourself as I am just a bot ')
+                #     speak('I hope I was able to assist you')
+                if 'meaning of' in query:
+                    lst_word = exword(query)
+                    sample = dictionary.meaning(lst_word)
+                    speak(sample)
                 if 'software' in query:
                     speak('opening sir')
                     query = query.replace("software", "")
